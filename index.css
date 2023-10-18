@@ -1,0 +1,42 @@
+body {
+	width: 100vw;
+	height: 100vh;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+.main {
+	width: 100%;
+	max-width: 800px;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.box {
+	display: flex;
+	flex-direction: column;
+	padding: 100px;
+	gap: 50px;
+}
+
+.nameSpace {
+	display: flex;
+	flex-direction: row-reverse; 
+	font-size: 20px;
+	font-weight: 500;
+}
+
+.graphBox {
+	display: flex;
+	flex-direction: column;
+}
+
+.graph {
+	width: 100%;
+	height: 500px;
+	background-color: #F7F7F7;
+}
