@@ -32,6 +32,7 @@ body {
 .itemBox {
 	width: 100%;
 	max-width: 800px;
+	margin-top: 100px;
 }
 
 .graph {
@@ -209,6 +210,7 @@ input::placeholder {
 
 .editValueDetail {
 	width: 100%;
+	max-width: 730px;
 	min-height: 300px;
 	resize: none;
 	border: 3px solid black;
