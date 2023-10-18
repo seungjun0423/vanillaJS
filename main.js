@@ -2,13 +2,21 @@
 const xList = [0,1,2,3,4];
 const yList = [0,100];
 
-const data = [
+const defaultData = [
 	{ id: 0, value: 75},
 	{ id: 1, value: 20},
 	{ id: 2, value: 80},
 	{ id: 3, value: 100},
 	{ id: 4, value: 70},
-]
+];
+
+const main = ( defaultData ) => {
+
+};
+
+const $textArea = document.getElementsByClassName('editValueDetail')[0];
+$textArea.value = JSON.stringify(defaultData,null,'  ');
+
 /** parameter => (xList: x축 수치, yList: y축 수치)  그래프 수치를 나열해주는 함수 (배열 타입 입력)*/
 const listingGraphData = ( xList, yList) => {
 	xList.map( el => {
@@ -32,7 +40,7 @@ listingGraphData(xList,yList);
 
 
 /** 2. 값 편집 항목 테이블 구현 및 삭제 함수 */
-const setTable = ( data ) => {
+const setTable = ( defaultData ) => {
 
 	/** 삭제 기능 */
 	const clickEvent = (e) => {
@@ -40,7 +48,7 @@ const setTable = ( data ) => {
 		target.remove();
 	};
 
-	data.map( (el,i) => {
+	defaultData.map( (el,i) => {
 		const $itemWrapper = document.createElement('div');
 		$itemWrapper.className = `itemWrapper ${i}`;
 
@@ -69,7 +77,7 @@ const setTable = ( data ) => {
 	})
 };
 
-setTable( data );
+setTable( defaultData );
 
 
 const addData = (id, value) => {
