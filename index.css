@@ -179,3 +179,27 @@ body {
 	cursor: pointer;
 }
 
+.inputId {
+	width: 10%;
+	height: 25px;
+	border: 3px solid black;
+	outline: none;
+}
+.inputValue {
+	width: 50%;
+	height: 25px;
+	border: 3px solid black;
+	outline: none;
+}
+
+.addBtn {
+	height: 32px;
+	margin-left: 10px;
+	font-weight: bold;
+}
+
+input::placeholder {
+  color: lightgrey;
+  font-style: italic;
+	padding-left: 5px;
+}
