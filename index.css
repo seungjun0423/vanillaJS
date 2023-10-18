@@ -33,65 +33,56 @@ body {
 	font-weight: 500;
 }
 
-.itemBox {
-}
-
 .graph {
-	width: inherit;
-	height: 500px;
+	height: 600px;
 	background-color: #F7F7F7;
 	padding-top: 20px;
 	padding-right: 20px;
 	padding-bottom: 30px;
 }
 
-
 .xBox {
 	width: 100%;
-	height: fit-content;
 	display: flex;
 	flex-direction: column;
 }
 
 .xAxis {
-	height: fit-content;
 	border-bottom: 2px solid black;
 	margin-left: 30px;
 }
 
 .xDataList {
 	display: flex;
+	justify-content: space-between;
+	padding-left: 30px;
 }
 
-.xdata {
-	width: 10%;
+.xData {
 	display: flex;
-	justify-content: end;
 }
 
 .yBox {
-	width: fit-content;
 	height: 100%;
 	display: flex;
 }
 
-.yAxis {
-	width: fit-content;
+.yAxis { 
 	height: 100%;
 	border-left: 2px solid black;
 }
 
 .yDataList {
 	width: 30px;
-	height: 100%;
 	display: flex;
 	flex-direction: column-reverse;
 }
 
-.ydata {
+.yData {
 	height: 10%;
 	display: flex;
 	justify-content: center;
+	align-items: start;
 }
 
 .zero {
