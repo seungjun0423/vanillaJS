@@ -18,7 +18,7 @@ xList.map( el => {
 	$x.className = "xData";
 	$x.innerText = el;
 	$xDataList.appendChild($x);
-})
+});
 /** y축 좌표 그리기 */
 yList.map( el => {
 	const $yDataList = 	document.getElementsByClassName("yDataList")[0]
@@ -26,7 +26,7 @@ yList.map( el => {
 	$y.className = "yData";
 	$y.innerText = el;
 	$yDataList.appendChild($y);
-})
+});
 
 
 // 2. 값 편집
@@ -66,10 +66,14 @@ data.map( (el,i) => {
 });
 
 /** 입력된 데이터를 토대로 테이블 그려주는 함수 */
-const setTable = ( data ) => {
+const setTable = ( ) => {
+	const len = document.getElementsByClassName('itemWrapper').length;
+	const $textAreaValue = document.getElementsByClassName('editValueDetail')[0].value;
 
-	const $len = document.getElementsByClassName('itemWrapper').length;
-	for(let i=0; i<$len; i++){
+	// id, value 값이 비어있다면 null을 넣어주는 정규표현식
+	const dataList = JSON.parse($textAreaValue.replace(/("id"|"value")\s*:\s*(?=,|\n)/g, '$1: null'));
+
+	for(let i=0; i<len; i++){
 		document.getElementsByClassName('itemWrapper')[0].remove();
 	}
 
@@ -79,7 +83,7 @@ const setTable = ( data ) => {
 		target.remove();
 	};
 	
-	data.map( (el,i) => {
+	dataList.map( (el,i) => {
 		const $itemWrapper = document.createElement('div');
 		$itemWrapper.className = `itemWrapper ${i}`;
 
@@ -95,7 +99,7 @@ const setTable = ( data ) => {
 		$deleteBtn.className = "deleteBtn";
 		$deleteBtn.innerText = `삭제`; 
 
-		/** 삭제 이벤트 버튼에 추가 */
+		/** 삭제 이벤트 Apply 버튼에 추가 */
 		$deleteBtn.addEventListener('click',(e)=>{clickEvent(e)});
 
 		$itemWrapper.appendChild($id);
@@ -135,11 +139,12 @@ const addData = (id, value) => {
 // 4. 값 고급 편집 
 /** 기본 데이터 그리기 */
 const $textArea = document.getElementsByClassName('editValueDetail')[0];
+// $textArea.addEventListener('input',(e)=>{console.log(e.target.value)});
 $textArea.value = JSON.stringify(data,null,'  ');
 
-/** 입력된 데이터를 적용 */
+/** Apply 버튼 클릭시 입력된 데이터를 적용 */
 const $applyEditValueDetail = document.getElementById('applyEditValueDetail');
-$applyEditValueDetail.addEventListener('click',()=>{ setTable(JSON.parse($textArea.value)); });
+$applyEditValueDetail.addEventListener('click', () => { setTable();});
 
 /** 데이터가 바뀌면 4번 항목 수정해주는 함수 */
 const setTextArea = () => {
@@ -147,11 +152,12 @@ const setTextArea = () => {
 	const len = document.getElementsByClassName("itemWrapper").length;
 	const $idList = document.getElementsByClassName('id');
 	const $valueList = document.getElementsByClassName('value');
+
 	for(let i=0; i<len; i++){
 		const id = $idList[i].innerText;
 		const value = $valueList[i].innerText;
 
-		dataList.push({ id, value});
+		dataList.push({ id: Number(id), value: Number(value)});
 	}
 
 	$textArea.value = JSON.stringify(dataList,null,'  ');
