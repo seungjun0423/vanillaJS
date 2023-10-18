@@ -1,6 +1,6 @@
 
 const xList = [0,1,2,3,4];
-const yList = [10,20,30,40,50,60,70,80,90,100];
+const yList = [0,100];
 
 const data = [
 	{ id: 0, value: 75},

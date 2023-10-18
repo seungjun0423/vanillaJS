@@ -54,7 +54,7 @@ body {
 
 .xDataList {
 	display: flex;
-	justify-content: space-between;
+	justify-content: space-around;
 	padding-left: 20px;
 }
 
@@ -76,10 +76,10 @@ body {
 	width: 30px;
 	display: flex;
 	flex-direction: column-reverse;
+	justify-content: space-between;
 }
 
 .yData {
-	height: 10%;
 	display: flex;
 	justify-content: center;
 	align-items: start;
