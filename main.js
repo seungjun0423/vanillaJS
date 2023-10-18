@@ -72,4 +72,23 @@ const setTable = ( data ) => {
 setTable( data );
 
 
+const addData = (id, value) => {
+
+	const inputEvent = ( type, e ) => {
+		const obj = {id: null, value: null};
+		if(type === "id"){
+
+		}
+		
+	};
+	const $inputId = document.getElementsByClassName("inputId")[0];
+	$inputId.addEventListener('input',(e)=>{console.log(e.target.value)});
+
+	const $inputValue = document.getElementsByClassName("inputValue")[0]; 
+	$inputValue.addEventListener('input',(e)=>{console.log(e.target.value)});
+};
+
+addData();
+
+
 
