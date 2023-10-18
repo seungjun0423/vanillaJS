@@ -12,13 +12,25 @@ const data = [
 
 // 1. 그래프 
 /** x축 좌표 그리기 */
-xList.map( el => {
-	const $xDataList = 	document.getElementsByClassName("xDataList")[0]
+for(let i=0;i<data.length;i++){
+	const xAxis = data[i].id;
+	const $xDataList = 	document.getElementsByClassName("xDataList")[0];
 	const $x = document.createElement('div');
 	$x.className = "xData";
-	$x.innerText = el;
+
+	$x.innerText = xAxis;
 	$xDataList.appendChild($x);
-});
+
+	const barValue = data[i].value;
+	const $yBox = document.getElementsByClassName('yBox')[0];
+	const $barBox = document.createElement('div');
+	$barBox.className = "barBox";
+	const $bar = document.createElement('div');
+	$bar.className = "bar";
+	$bar.style.height = `${barValue * 6}px`;
+	$barBox.appendChild($bar);
+	$yBox.appendChild($barBox);
+}
 /** y축 좌표 그리기 */
 yList.map( el => {
 	const $yDataList = 	document.getElementsByClassName("yDataList")[0]
