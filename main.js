@@ -11,6 +11,7 @@ const data = [
 ];
 
 // 1. 그래프 
+/** x축 좌표 그리기 */
 xList.map( el => {
 	const $xDataList = 	document.getElementsByClassName("xDataList")[0]
 	const $x = document.createElement('div');
@@ -18,7 +19,7 @@ xList.map( el => {
 	$x.innerText = el;
 	$xDataList.appendChild($x);
 })
-
+/** y축 좌표 그리기 */
 yList.map( el => {
 	const $yDataList = 	document.getElementsByClassName("yDataList")[0]
 	const $y = document.createElement('div');
@@ -29,6 +30,7 @@ yList.map( el => {
 
 
 // 2. 값 편집
+/** 기본 테이블 그리기 */
 data.map( (el,i) => {
 	const $itemWrapper = document.createElement('div');
 	$itemWrapper.className = `itemWrapper ${i}`;
@@ -63,7 +65,7 @@ data.map( (el,i) => {
 	$table.appendChild($itemWrapper);
 });
 
-/** 2. 값 편집 항목 테이블 구현 및 삭제 함수 */
+/** 입력된 데이터를 토대로 테이블 그려주는 함수 */
 const setTable = ( data ) => {
 
 	const $len = document.getElementsByClassName('itemWrapper').length;
@@ -107,8 +109,9 @@ const setTable = ( data ) => {
 };
 
 const $applyEditValue = document.getElementById('applyEditValue');
-const $value = document.getElementsByClassName("itemWrapper");
-$applyEditValue.addEventListener('click',()=>{console.log($value)})
+// console.log($value);
+$applyEditValue.addEventListener('click',()=>{setTextArea()})
+
 
 
 // 3. 값 추가 
@@ -130,8 +133,26 @@ const addData = (id, value) => {
 
 
 // 4. 값 고급 편집 
+/** 기본 데이터 그리기 */
 const $textArea = document.getElementsByClassName('editValueDetail')[0];
 $textArea.value = JSON.stringify(data,null,'  ');
 
+/** 입력된 데이터를 적용 */
 const $applyEditValueDetail = document.getElementById('applyEditValueDetail');
 $applyEditValueDetail.addEventListener('click',()=>{ setTable(JSON.parse($textArea.value)); });
+
+/** 데이터가 바뀌면 4번 항목 수정해주는 함수 */
+const setTextArea = () => {
+	const dataList = [];
+	const len = document.getElementsByClassName("itemWrapper").length;
+	const $idList = document.getElementsByClassName('id');
+	const $valueList = document.getElementsByClassName('value');
+	for(let i=0; i<len; i++){
+		const id = $idList[i].innerText;
+		const value = $valueList[i].innerText;
+
+		dataList.push({ id, value});
+	}
+
+	$textArea.value = JSON.stringify(dataList,null,'  ');
+};
