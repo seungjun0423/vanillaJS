@@ -12,9 +12,14 @@ const drawPage = (data) => {
 
 	/** View: data를 입력받고 그래프 생성 */
 	const drawGraph = (data) => {
-		const minY = data.map(el=>el.value).sort((a,b)=>a-b)[0] >= 0 ? 0: data.map(el=>el.value).sort((a,b)=>a-b)[0];
+		const minY = data.map(el=>el.value).sort((a,b)=>a-b)[0] >= 0 ? 
+			0: 
+			data.map(el=>el.value)
+			.sort((a,b)=>a-b)[0];
+
 		const maxY = data.map(el=>el.value).sort((a,b)=>b-a)[0] ?? 100;
-		const yData = [minY, maxY];
+
+		const yData = ['0', '20', '40', '60', '80', '100'];
 
 		const len = document.getElementsByClassName('barBox').length;
 
@@ -46,10 +51,13 @@ const drawPage = (data) => {
 			const barValue = data[i].value;
 			const $yBox = document.getElementsByClassName('yBox')[0];
 			const $barBox = document.createElement('div');
-			$barBox.className = "barBox";
 			const $bar = document.createElement('div');
+
+			$barBox.className = "barBox";
 			$bar.className = "bar";
+
 			$bar.style.height = `${barValue * 600/(maxY-minY)}px`;
+
 			$barBox.appendChild($bar);
 			$yBox.appendChild($barBox);
 		}
@@ -134,6 +142,7 @@ const editValueFn = (data) => {
 	for(let i=0; i<len; i++){
 		const id = document.getElementsByClassName(`id`)[i].innerText;
 		const value = document.getElementsByClassName(`value`)[i].value;
+		const isNumber = /^-?\d*\.?\d+$/;
 
 		if(isNumber.test(value) && value !== ''){
 			dataState.push({id, value});
