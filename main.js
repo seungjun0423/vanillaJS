@@ -33,6 +33,7 @@ const drawPage = (data) => {
 		};
 
 		for(let i=0;i<data.length;i++){
+			// x축 id 값 삽입
 			const xAxis = data[i].id;
 			const $xDataList = 	document.getElementsByClassName("xDataList")[0];
 			const $x = document.createElement('div');
@@ -41,6 +42,7 @@ const drawPage = (data) => {
 			$x.innerText = xAxis;
 			$xDataList.appendChild($x);
 
+			// bar 그래프 생성 후 삽입
 			const barValue = data[i].value;
 			const $yBox = document.getElementsByClassName('yBox')[0];
 			const $barBox = document.createElement('div');
@@ -182,6 +184,8 @@ const setBtn = (data) => {
 		addDataFn(data);
 		drawPage(data);
 	});
+
+	// 값 추가시 number만 입력되도록 alert 이벤트 추가
 	const $inputValue = document.getElementsByClassName('inputValue')[0];
 	$inputValue.addEventListener('input',(e)=>{
 		const input = e.target.value ?? 0;
@@ -191,9 +195,8 @@ const setBtn = (data) => {
 		if( !isNumber.test(input) && input !== ''){
 			$inputValue.value = input.slice(0,-1);
 			alert('숫자만 입력해주세요!');
-		}
-
-	})
+		};
+	});
 
 	// 4. 값 고급 편집 : Apply 버튼 이벤트 추가
 	const $applyEditValueDetail = document.getElementById('applyEditValueDetail');
