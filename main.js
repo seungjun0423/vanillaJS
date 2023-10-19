@@ -14,7 +14,7 @@ const drawPage = (data) => {
 	const drawGraph = (data) => {
 		const minY = data.map(el=>el.value).sort((a,b)=>a-b)[0] >= 0 ? 0: data.map(el=>el.value).sort((a,b)=>a-b)[0];
 		const maxY = data.map(el=>el.value).sort((a,b)=>b-a)[0] ?? 100;
-		const yAxisList = [minY, maxY];
+		const yData = [minY, maxY];
 
 		const len = document.getElementsByClassName('barBox').length;
 
@@ -26,7 +26,8 @@ const drawPage = (data) => {
 				$xData.remove();
 			};
 			const $yData = document.getElementsByClassName('yData');
-			yAxisList.map(()=>{
+			
+			yData.map(()=>{
 				$yData[0].remove();
 			})
 		};
@@ -52,7 +53,7 @@ const drawPage = (data) => {
 		}
 
 		// y축 좌표 그리기 
-		yAxisList.map( el => {
+		yData.map( el => {
 			const $yDataList = 	document.getElementsByClassName("yDataList")[0]
 			const $y = document.createElement('div');
 			$y.className = "yData";
@@ -71,7 +72,7 @@ const drawPage = (data) => {
 			}
 		};
 
-		data.map( (el,i) => {
+		data.map( (el) => {
 			const $itemWrapper = document.createElement('div');
 			$itemWrapper.className = `itemWrapper`;
 
@@ -81,7 +82,16 @@ const drawPage = (data) => {
 
 			const $value = document.createElement('input');
 			$value.className = `value`;
-			$value.value = `${el.value}`; 
+			$value.value = `${el.value}`;
+			
+			// 테이블 값 편집시 숫자만 입력할 수 있도록 alert 이벤트 추가
+			$value.addEventListener('input', (e)=>{
+				const isNumber = /^-?\d*\.?\d+$/;
+				if(!isNumber.test(e.target.value)){
+					$value.value = `${el.value}`;
+					alert('숫자만 입력해주세요!');
+				};
+			});
 
 			const $deleteBtn = document.createElement('div');
 			$deleteBtn.className = "deleteBtn";
@@ -122,7 +132,12 @@ const editValueFn = (data) => {
 	for(let i=0; i<len; i++){
 		const id = document.getElementsByClassName(`id`)[i].innerText;
 		const value = document.getElementsByClassName(`value`)[i].value;
-		dataState.push({id, value});
+
+		if(isNumber.test(value) && value !== ''){
+			dataState.push({id, value});
+		} else {
+			return alert('숫자만 입력 가능합니다.');
+		}
 	};
 
 	data.splice(0);
@@ -151,12 +166,12 @@ const editValueDetailFn = (data) => {
 	dataState.map(el=> { data.push(el) });
 };
 
-/** 전체 이벤트를 관리하는 함수 */
-const setEvent = (data) => {
+/** 버튼 관리하는 함수 */
+const setBtn = (data) => {
 
 	// 2. 값 편집 : Apply버튼 이벤트 추가
 	const $applyEditValue = document.getElementById('applyEditValue');
-	$applyEditValue.addEventListener('click',()=>{ 
+	$applyEditValue.addEventListener('click',(e)=>{
 		editValueFn(data);
 		drawPage(data);
 	});
@@ -167,6 +182,18 @@ const setEvent = (data) => {
 		addDataFn(data);
 		drawPage(data);
 	});
+	const $inputValue = document.getElementsByClassName('inputValue')[0];
+	$inputValue.addEventListener('input',(e)=>{
+		const input = e.target.value ?? 0;
+		// console.log(input === '')
+		const isNumber = /^-?\d*\.?\d+$/;
+
+		if( !isNumber.test(input) && input !== ''){
+			$inputValue.value = input.slice(0,-1);
+			alert('숫자만 입력해주세요!');
+		}
+
+	})
 
 	// 4. 값 고급 편집 : Apply 버튼 이벤트 추가
 	const $applyEditValueDetail = document.getElementById('applyEditValueDetail');
@@ -179,4 +206,4 @@ const setEvent = (data) => {
 
 // 첫 화면 생성
 drawPage(data);
-setEvent(data);
+setBtn(data);
