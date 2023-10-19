@@ -16,11 +16,8 @@ const drawPage = (data) => {
 			0: 
 			data.map(el=>el.value)
 			.sort((a,b)=>a-b)[0];
-
 		const maxY = data.map(el=>el.value).sort((a,b)=>b-a)[0] ?? 100;
-
 		const yData = ['0', '20', '40', '60', '80', '100'];
-
 		const len = document.getElementsByClassName('barBox').length;
 
 		if(len){
@@ -155,8 +152,12 @@ const editValueFn = (data) => {
 		const value = document.getElementsByClassName(`value`)[i].value;
 		const isNumber = /^-?\d*\.?\d+$/;
 
-		if(isNumber.test(value) && value !== ''){
-			dataState.push({id, value});
+		if(isNumber.test(value) || value === ''){
+			if(value === ''){
+				dataState.push({id, value: 0});
+			} else {
+				dataState.push({id, value});
+			}
 		} else {
 			return alert('숫자만 입력 가능합니다.');
 		}
@@ -211,7 +212,7 @@ const setBtn = (data) => {
 
 	// 2. 값 편집 : Apply버튼 이벤트 추가
 	const $applyEditValue = document.getElementById('applyEditValue');
-	$applyEditValue.addEventListener('click',(e)=>{
+	$applyEditValue.addEventListener('click',()=>{
 		editValueFn(data);
 		drawPage(data);
 	});
