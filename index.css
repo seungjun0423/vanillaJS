@@ -170,10 +170,11 @@ body {
 	height: 40px;
 	display: flex;
 	flex: 1 1 60%;
-	justify-content: center;
-	align-items: center;
+	text-align: center;
 	border: 1px solid #FFFFFF;
 	font-weight: bold;
+	outline: none;
+	background-color: #D9D9D9;
 }
 
 .itemWrapper .deleteBtn {
@@ -186,6 +187,7 @@ body {
 	border: 1px solid #FFFFFF;
 	font-weight: bold;
 	cursor: pointer;
+	background-color: #D9D9D9;
 }
 
 .applyBtn {
