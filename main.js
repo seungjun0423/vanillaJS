@@ -8,25 +8,13 @@ const data = [
 
 // 2. 값 편집 : Apply 버튼 이벤트
 const $applyEditValue = document.getElementById('applyEditValue');
-$applyEditValue.addEventListener('click',(e)=>{ });
+$applyEditValue.addEventListener('click',(e)=>{ editValueFn(data); });
 
 
 // 3. 값 추가 : Add 버튼 이벤트 
-const $inputId = document.getElementsByClassName("inputId")[0];
-$inputId.addEventListener('input',(e)=>{ inputEvent($inputId, e.target.value) });
-
-const $inputValue = document.getElementsByClassName("inputValue")[0]; 
-$inputValue.addEventListener('input',(e)=>{ inputEvent($inputValue, e.target.value) });
-
 const $addBtn = document.getElementsByClassName("addBtn")[0];
-$addBtn.addEventListener('click', ()=>{
-	data.push({
-		id: Number($inputId.value),
-		value: Number($inputValue.value)
-	});
-	setGraph(data);
-	inputEvent($inputId,'' );
-	inputEvent($inputValue,'' );
+$addBtn.addEventListener('click', ()=> {
+	addDataFn(data);
 });
 
 // 4. 값 고급 편집 : Apply 버튼 이벤트 
@@ -36,12 +24,13 @@ $applyEditValueDetail.addEventListener('click', () => { });
 
 
 // 1. 그래프 
-/** x축 좌표 그리기 */
-const setGraph = (data) => {
-	const dataState = [...data];
+const drawGraph = (data) => {
+	const minValue = 0;
+	const maxValue = data.map(el=>el.value).sort((a,b)=>b-a)[0];
+	const yAxisList = [minValue, maxValue];
+
 	const len = document.getElementsByClassName('barBox').length;
-	const maxValue = dataState.map(el=>el.value).sort((a,b)=>b-a)[0];
-	const yAxisList = [0, maxValue];
+	
 	if(len){
 		for(let i=0;i<len;i++){
 			const $barBox = document.getElementsByClassName('barBox')[0];
@@ -85,104 +74,14 @@ const setGraph = (data) => {
 };
 
 // 2. 값 편집
-/** 기본 테이블 그리기 */
-// const _setTable = (data) => {
-// 	/** 삭제 기능 */
-// 	const clickEvent = (e) => {
-// 		const target = e.target.parentNode;
-// 		target.remove();
-// 	};
-// 	data.map( (el,i) => {
-// 		const $itemWrapper = document.createElement('div');
-// 		$itemWrapper.className = `itemWrapper ${i}`;
-
-// 		const $id = document.createElement('div');
-// 		$id.className = "id";
-// 		$id.innerText = `${el.id}`;
-
-// 		const $value = document.createElement('div');
-// 		$value.className = "value";
-// 		$value.innerText = `${el.value}`; 
-
-// 		const $deleteBtn = document.createElement('div');
-// 		$deleteBtn.className = "deleteBtn";
-// 		$deleteBtn.innerText = `삭제`; 
-
-// 		/** 삭제 이벤트 버튼에 추가 */
-// 		$deleteBtn.addEventListener('click',(e)=>{ clickEvent(e) });
-
-// 		$itemWrapper.appendChild($id);
-// 		$itemWrapper.appendChild($value);
-// 		$itemWrapper.appendChild($deleteBtn);
-
-// 		/** 만들어진 요소 html 삽입 */
-// 		const $table = document.getElementsByClassName("table")[0];
-// 		$table.appendChild($itemWrapper);
-// 	});
-// };
-
 /** 입력된 데이터를 토대로 테이블 그려주는 함수 */
-const DsetTable = (data) => {
+const drawTable = (data) => {
 	const len = document.getElementsByClassName('itemWrapper').length;
-	const $textAreaValue = document.getElementsByClassName('editValueDetail')[0].value;
-	
-	// id, value 값이 비어있다면 null을 넣어주는 정규표현식
-	let dataList;
+
 	if(len){
-		dataList = JSON.parse($textAreaValue.replace(/("id"|"value")\s*:\s*(?=,|\n)/g, '$1: null'));
-	};
-	// value 값이 number 인지 아닌지 판별하는 정규 표현식
-	// const regex = /("value"\s*:\s*)([^0-9,\n]+)/g;
-	// dataList = dataList.replace(regex,'$10');
-	// console.log(dataList);
-
-
-	for(let i=0; i<len; i++){
-		document.getElementsByClassName('itemWrapper')[0].remove();
-		data.pop();
-	}
-
-	dataList.map(el=>{data.push(el)});
-
-	/** 삭제 기능 */
-	// const clickEvent = (e) => {
-	// 	const target = e.target.parentNode;
-	// 	target.remove();
-	// };
-	
-	// data.map( (el,i) => {
-	// 	const $itemWrapper = document.createElement('div');
-	// 	$itemWrapper.className = `itemWrapper ${i}`;
-
-	// 	const $id = document.createElement('div');
-	// 	$id.className = "id";
-	// 	$id.innerText = `${el.id}`;
-
-	// 	const $value = document.createElement('div');
-	// 	$value.className = "value";
-	// 	$value.innerText = `${el.value}`; 
-
-	// 	const $deleteBtn = document.createElement('div');
-	// 	$deleteBtn.className = "deleteBtn";
-	// 	$deleteBtn.innerText = `삭제`; 
-
-	// 	/** 삭제 이벤트 Apply 버튼에 추가 */
-	// 	$deleteBtn.addEventListener('click',(e)=>{clickEvent(e)});
-
-	// 	$itemWrapper.appendChild($id);
-	// 	$itemWrapper.appendChild($value);
-	// 	$itemWrapper.appendChild($deleteBtn);
-
-	// 	/** 만들어진 요소 html 삽입 */
-	// 	const $table = document.getElementsByClassName("table")[0];
-	// 	$table.appendChild($itemWrapper);
-	// })
-};
-
-const setTable = (data) => {
-	const deleteEvent = (e) => {
-		const target = e.target.parentNode;
-		target.remove();
+		for(let i=0; i<len; i++){
+			document.getElementsByClassName('itemWrapper')[0].remove();
+		}
 	};
 
 	data.map( (el,i) => {
@@ -190,19 +89,22 @@ const setTable = (data) => {
 		$itemWrapper.className = `itemWrapper ${i}`;
 
 		const $id = document.createElement('div');
-		$id.className = "id";
+		$id.className = `id ${i}`;
 		$id.innerText = `${el.id}`;
 
 		const $value = document.createElement('input');
-		$value.className = "value";
+		$value.className = `value ${i}`;
 		$value.value = `${el.value}`; 
 
 		const $deleteBtn = document.createElement('div');
 		$deleteBtn.className = "deleteBtn";
 		$deleteBtn.innerText = `삭제`; 
 
-		/** 삭제 이벤트 Apply 버튼에 추가 */
-		$deleteBtn.addEventListener('click',(e)=>{deleteEvent(e)});
+		/** 삭제 버튼에 이벤트 추가 */
+		$deleteBtn.addEventListener('click',(e) => {
+			const target = e.target.parentNode;
+			target.remove();
+		});
 
 		$itemWrapper.appendChild($id);
 		$itemWrapper.appendChild($value);
@@ -214,43 +116,39 @@ const setTable = (data) => {
 	})
 };
 
+const editValueFn = (data) => {
+	const len = document.getElementsByClassName('itemWrapper').length;
+	for(let i=0; i<len; i++){
+		const parent = document.getElementsByClassName('itemWrapper')[i];
+	};
+}
 
 // 3. 값 추가 
-const inputEvent = ( el, value ) => {
-	el.value = value;
-};
+const addDataFn = (data) => {
+	const $inputId = document.getElementsByClassName("inputId")[0];
+	const $inputValue = document.getElementsByClassName("inputValue")[0]; 
 
+	data.push({
+		id: Number($inputId.value),
+		value: Number($inputValue.value)
+	});
+	$inputId.value = '';
+	$inputValue.value = '';
+	
+	drawGraph(data);
+	drawTable(data);
+	drawTextArea(data);
+}
 
 // 4. 값 고급 편집 
-/** 기본 데이터 그리기 */
-const _setTextArea = (data) =>{
+/** 입력된 데이터를 토대로 textarea에 데이터를 넣어주는 함수 */
+const drawTextArea = (data) => {
 	const $textArea = document.getElementsByClassName('editValueDetail')[0];
 	$textArea.value = JSON.stringify(data,null,'  ');
 };
 
-/** 데이터가 바뀌면 4번 항목 수정해주는 함수 */
-const DsetTextArea = (data) => {
-	const dataList = [];
-	const len = document.getElementsByClassName("itemWrapper").length;
-	const $idList = document.getElementsByClassName('id');
-	const $valueList = document.getElementsByClassName('value');
-
-	for(let i=0; i<len; i++){
-		const id = $idList[i].innerText;
-		const value = $valueList[i].innerText;
-
-		dataList.push({ id: Number(id), value: Number(value)});
-	}
-	// const $textArea = document.getElementsByClassName('editValueDetail')[0];
-	// $textArea.value = JSON.stringify(dataList,null,'  ');
-};
-
-const setTextArea = (data) => {
-	const $textArea = document.getElementsByClassName('editValueDetail')[0];
-	$textArea.value = JSON.stringify(data,null,'  ');
-};
-
-
-setGraph(data);
-setTable(data);
-setTextArea(data);
+// const setPage = () => {
+	drawGraph(data);
+	drawTable(data);
+	drawTextArea(data);
+// };
