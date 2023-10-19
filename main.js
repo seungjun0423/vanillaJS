@@ -15,9 +15,11 @@ const data = [
 const setGraph = (data) => {
 	const len = document.getElementsByClassName('barBox').length;
 	for(let i=0;i<len;i++){
-		document.getElementsByClassName('barBox')[0].remove();
+		const $barBox = document.getElementsByClassName('barBox')[0];
+		const $xData = document.getElementsByClassName('xData')[0];
+		$barBox.remove();
+		$xData.remove();
 	};
-	
 
 	for(let i=0;i<data.length;i++){
 		const xAxis = data[i].id;
@@ -32,6 +34,7 @@ const setGraph = (data) => {
 		const $yBox = document.getElementsByClassName('yBox')[0];
 		const $barBox = document.createElement('div');
 		$barBox.className = "barBox";
+		// $barBox.style.width = `${(1/data.length)*100}%`;
 		const $bar = document.createElement('div');
 		$bar.className = "bar";
 		$bar.style.height = `${barValue * 6}px`;
@@ -145,10 +148,10 @@ const inputEvent = ( el, value ) => {
 };
 
 const $inputId = document.getElementsByClassName("inputId")[0];
-$inputId.addEventListener('input',(e)=>{ inputEvent($inputId,e.target.value) });
+$inputId.addEventListener('input',(e)=>{ inputEvent($inputId, e.target.value) });
 
 const $inputValue = document.getElementsByClassName("inputValue")[0]; 
-$inputValue.addEventListener('input',(e)=>{ inputEvent($inputValue,e.target.value) });
+$inputValue.addEventListener('input',(e)=>{ inputEvent($inputValue, e.target.value) });
 
 
 const $addBtn = document.getElementsByClassName("addBtn")[0];
@@ -160,6 +163,8 @@ $addBtn.addEventListener('click', ()=>{
 	setGraph(data);
 	setTable(data);
 	_setTextArea(data);
+	inputEvent($inputId,'' );
+	inputEvent($inputValue,'' );
 });
 
 
