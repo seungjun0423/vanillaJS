@@ -1,3 +1,5 @@
+import view from "./view.js";
+
 /** Model: data 소스 */
 const data = [
 	{ id: 0, value: 75},
@@ -6,141 +8,6 @@ const data = [
 	{ id: 3, value: 100},
 	{ id: 4, value: 70},
 ];
-
-/** View: 전체 페이지를 그려주는 함수 */
-const drawPage = (data) => {
-
-	/** View: data를 입력받고 그래프 생성 */
-	const drawGraph = (data) => {
-		const minY = data.map(el=>el.value).sort((a,b)=>a-b)[0] >= 0 ? 
-			0: 
-			data.map(el=>el.value)
-			.sort((a,b)=>a-b)[0];
-		const maxY = data.map(el=>el.value).sort((a,b)=>b-a)[0] ?? 100;
-		const yData = ['0', '20', '40', '60', '80', '100'];
-		const len = document.getElementsByClassName('barBox').length;
-
-		if(len){
-			for(let i=0;i<len;i++){
-				const $barBox = document.getElementsByClassName('barBox')[0];
-				const $xData = document.getElementsByClassName('xData')[0];
-				$barBox.remove();
-				$xData.remove();
-			};
-			const $yData = document.getElementsByClassName('yData');
-			
-			yData.map(()=>{
-				$yData[0].remove();
-			})
-		};
-
-		for(let i=0;i<data.length;i++){
-			// x축 id 값 삽입
-			const xIdValue = data[i].id;
-			const $xDataList = 	document.getElementsByClassName("xDataList")[0];
-			const $x = document.createElement('div');
-			$x.className = "xData";
-			$x.style.width = `${770 * (1/data.length)}px`
-
-			$x.innerText = xIdValue;
-			$xDataList.appendChild($x);
-
-			// bar 그래프 생성 후 삽입
-			const barValue = data[i].value;
-			const $yBox = document.getElementsByClassName('yBox')[0];
-			const $barBox = document.createElement('div');
-			const $bar = document.createElement('div');
-			const $tooltip = document.createElement('div');
-			$tooltip.className = 'tooltip';
-			$tooltip.innerText = `${barValue}`;
-
-			$barBox.className = "barBox";
-			$bar.className = "bar";
-			$bar.style.height = `${barValue * 600/(maxY-minY)}px`;
-
-			$bar.addEventListener('mouseover', (e)=>{
-				$bar.appendChild($tooltip);
-			});
-
-			$bar.addEventListener('mouseout', (e)=>{   
-				e.target.children[0].remove();
-		});
-
-			$barBox.appendChild($bar);
-			$yBox.appendChild($barBox);
-		}
-
-		// y축 좌표 그리기 
-		yData.map( el => {
-			const $yDataList = 	document.getElementsByClassName("yDataList")[0]
-			const $y = document.createElement('div');
-			$y.className = "yData";
-			$y.innerText = el;
-			$yDataList.appendChild($y);
-		});
-	};
-
-	/** View: data를 입력받고 테이블 생성 */
-	const drawTable = (data) => {
-		const len = document.getElementsByClassName('itemWrapper').length;
-
-		if(len){
-			for(let i=0; i<len; i++){
-				document.getElementsByClassName('itemWrapper')[0].remove();
-			}
-		};
-
-		data.map( (el) => {
-			const $itemWrapper = document.createElement('div');
-			$itemWrapper.className = `itemWrapper`;
-
-			const $id = document.createElement('div');
-			$id.className = `id`;
-			$id.innerText = `${el.id}`;
-
-			const $value = document.createElement('input');
-			$value.className = `value`;
-			$value.value = `${el.value}`;
-			
-			// 테이블 값 편집시 숫자만 입력할 수 있도록 alert 이벤트 추가
-			$value.addEventListener('input', (e)=>{
-				const isNumber = /^-?\d*\.?\d+$/;
-				if(!isNumber.test(e.target.value) && e.target.value !== ''){
-					$value.value = `${el.value}`;
-					alert('숫자만 입력해주세요!');
-				};
-			});
-
-			const $deleteBtn = document.createElement('div');
-			$deleteBtn.className = "deleteBtn";
-			$deleteBtn.innerText = `삭제`; 
-
-			/** 삭제 버튼에 이벤트 추가 */
-			$deleteBtn.addEventListener('click',(e) => {
-				const target = e.target.parentNode;
-				target.remove();
-			});
-
-			$itemWrapper.appendChild($id);
-			$itemWrapper.appendChild($value);
-			$itemWrapper.appendChild($deleteBtn);
-
-			/** 만들어진 요소 html 삽입 */
-			const $table = document.getElementsByClassName("table")[0];
-			$table.appendChild($itemWrapper);
-		})
-	};
-
-	/** View: data를 입력받고 텍스트 삽입 */
-	const drawTextArea = (data) => {
-		const $textArea = document.getElementsByClassName('editValueDetail')[0];
-		$textArea.value = JSON.stringify(data,null,'  ');
-	};
-
-	drawGraph(data);
-	drawTable(data);
-	drawTextArea(data);
-};
 
 /** Controller:  기존 data를 입력받고 값 편집 (2.값 편집: Apply버튼 클릭 이벤트)*/
 const editValueFn = (data) => {
@@ -152,11 +19,13 @@ const editValueFn = (data) => {
 		const value = document.getElementsByClassName(`value`)[i].value;
 		const isNumber = /^-?\d*\.?\d+$/;
 
+		// VALUE에 입력된 값이 숫자 또는 공백일 시 데이터 변경
 		if(isNumber.test(value) || value === ''){
+			// 공백인 경우 0으로 값 변경 후 데이터 삽입
 			if(value === ''){
-				dataState.push({id, value: 0});
+				dataState.push({id: Number(id), value: 0});
 			} else {
-				dataState.push({id, value});
+				dataState.push({id: Number(id), value: Number(value)});
 			}
 		} else {
 			return alert('숫자만 입력 가능합니다.');
@@ -188,7 +57,15 @@ const addDataFn = (data) => {
 	if(isDuplicateId){
 		return alert('중복된 ID 입니다!');
 	};
-	const dataState = [...data, {id: $inputId.value, value: $inputValue.value}];
+
+	const dataState = [...data];
+	const isNumber = /^-?\d*\.?\d+$/;
+
+	if( isNumber.test($inputId.value)){
+		dataState.push({id: Number($inputId.value), value: Number($inputValue.value)});
+	} else{
+		dataState.push({id: $inputId.value, value: Number($inputValue.value)});
+	}
 
 	data.splice(0);
 
@@ -207,21 +84,32 @@ const editValueDetailFn = (data) => {
 	dataState.map(el=> { data.push(el) });
 };
 
-/** 버튼 관리하는 함수 */
+/** 버튼에 이벤트를 부여하는 함수 */
 const setBtn = (data) => {
 
 	// 2. 값 편집 : Apply버튼 이벤트 추가
 	const $applyEditValue = document.getElementById('applyEditValue');
 	$applyEditValue.addEventListener('click',()=>{
-		editValueFn(data);
-		drawPage(data);
+		if(window.confirm("데이터를 수정하시겠습니까?")) { 
+			editValueFn(data);
+			view(data);
+		} else {
+			// 수정사항 원상복구
+			view(data);
+		};
 	});
 
 	// 3. 값 추가 : Add 버튼 이벤트 추가
 	const $addBtn = document.getElementsByClassName("addBtn")[0];
 	$addBtn.addEventListener('click', ()=>{
-		addDataFn(data);
-		drawPage(data);
+		if(window.confirm("데이터를 추가하시겠습니까?")) { 
+			addDataFn(data);
+			view(data);
+		} else {
+			// input창 초기화
+			document.getElementsByClassName("inputId")[0].value = '';
+			document.getElementsByClassName("inputValue")[0].value = '';
+		};
 	});
 
 	// 값 추가시 number만 입력되도록 alert 이벤트 추가
@@ -239,12 +127,15 @@ const setBtn = (data) => {
 	// 4. 값 고급 편집 : Apply 버튼 이벤트 추가
 	const $applyEditValueDetail = document.getElementById('applyEditValueDetail');
 	$applyEditValueDetail.addEventListener('click', ()=>{ 
-		editValueDetailFn(data);
-		drawPage(data);
+		if(window.confirm("데이터를 수정하시겠습니까?")){
+			editValueDetailFn(data);
+			view(data);
+		} else {
+			view(data);
+		}
 	});
 };
 
-
 // 첫 화면 생성
-drawPage(data);
+view(data);
 setBtn(data);
