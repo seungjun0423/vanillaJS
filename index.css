@@ -80,12 +80,14 @@ body {
 .xDataList {
 	display: flex;
 	justify-content: space-around;
-	padding-left: 20px;
+	padding-left: 26.5px;
+	padding-right: 5px;
 }
 
 .xData {
 	display: flex;
 	font-weight: bold;
+	justify-content: center;
 }
 
 .yBox {
@@ -236,6 +238,8 @@ body {
 	margin-left: 10px;
 	font-weight: bold;
 	border-radius: 5px;
+	background-color: #525659;
+	color: #FFFFFF;
 }
 
 input::placeholder {

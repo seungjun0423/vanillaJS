@@ -39,12 +39,13 @@ const drawPage = (data) => {
 
 		for(let i=0;i<data.length;i++){
 			// x축 id 값 삽입
-			const xAxis = data[i].id;
+			const xIdValue = data[i].id;
 			const $xDataList = 	document.getElementsByClassName("xDataList")[0];
 			const $x = document.createElement('div');
 			$x.className = "xData";
+			$x.style.width = `${770 * (1/data.length)}px`
 
-			$x.innerText = xAxis;
+			$x.innerText = xIdValue;
 			$xDataList.appendChild($x);
 
 			// bar 그래프 생성 후 삽입
@@ -169,9 +170,25 @@ const editValueFn = (data) => {
 const addDataFn = (data) => {
 	const $inputId = document.getElementsByClassName("inputId")[0];
 	const $inputValue = document.getElementsByClassName("inputValue")[0];
+	const isDuplicateId = data.filter( el => el.id===Number($inputId.value)).length !== 0;
+	console.log(isDuplicateId);
+
+	if(isDuplicateId.length !== 0){
+		return alert('중복된 ID 입니다!');
+	}
+	if($inputId.value === '' && $inputValue.value === ''){
+		return alert('ID 와 VALUE 를 입력해주세요!')
+	}
+	if($inputId.value === ''){
+		return alert('ID를 입력해주세요!');
+	}
+	if($inputValue.value === ''){
+		return alert('VALUE를 입력해주세요!');
+	}
 	const dataState = [...data, {id: $inputId.value, value: $inputValue.value}];
 
 	data.splice(0);
+
 	dataState.map(el => { data.push(el) });
 	$inputId.value = '';
 	$inputValue.value = '';
@@ -208,7 +225,6 @@ const setBtn = (data) => {
 	const $inputValue = document.getElementsByClassName('inputValue')[0];
 	$inputValue.addEventListener('input',(e)=>{
 		const input = e.target.value ?? 0;
-		// console.log(input === '')
 		const isNumber = /^-?\d*\.?\d+$/;
 
 		if( !isNumber.test(input) && input !== ''){
