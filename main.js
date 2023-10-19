@@ -52,11 +52,21 @@ const drawPage = (data) => {
 			const $yBox = document.getElementsByClassName('yBox')[0];
 			const $barBox = document.createElement('div');
 			const $bar = document.createElement('div');
+			const $tooltip = document.createElement('div');
+			$tooltip.className = 'tooltip';
+			$tooltip.innerText = `${barValue}`;
 
 			$barBox.className = "barBox";
 			$bar.className = "bar";
-
 			$bar.style.height = `${barValue * 600/(maxY-minY)}px`;
+
+			$bar.addEventListener('mouseover', (e)=>{
+				$bar.appendChild($tooltip);
+			});
+
+			$bar.addEventListener('mouseout', (e)=>{   
+				e.target.children[0].remove();
+		});
 
 			$barBox.appendChild($bar);
 			$yBox.appendChild($barBox);
@@ -97,7 +107,7 @@ const drawPage = (data) => {
 			// 테이블 값 편집시 숫자만 입력할 수 있도록 alert 이벤트 추가
 			$value.addEventListener('input', (e)=>{
 				const isNumber = /^-?\d*\.?\d+$/;
-				if(!isNumber.test(e.target.value)){
+				if(!isNumber.test(e.target.value) && e.target.value !== ''){
 					$value.value = `${el.value}`;
 					alert('숫자만 입력해주세요!');
 				};
