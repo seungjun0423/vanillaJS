@@ -9,11 +9,10 @@ const data = [
 	{ id: 4, value: 70},
 ];
 
-/** Controller:  기존 data를 입력받고 값 편집 (2.값 편집: Apply버튼 클릭 이벤트)*/
-
 /** number인지 아닌지 판별하는 정규표현식 */
 const isNumber = /^-?\d*\.?\d+$/;
 
+/** Controller:  기존 data를 입력받고 값 편집 (2.값 편집: Apply버튼 클릭 이벤트)*/
 const editValueFn = (data) => {
 	const len = document.getElementsByClassName('itemWrapper').length;
 	const dataState = [];
@@ -80,43 +79,66 @@ const addDataFn = (data) => {
 
 /** Controller: 기존 data를 입력받고 값 고급 편집 (4.값 고급 편집: Apply버튼 클릭 이벤트) */
 const editValueDetailFn = (data) => {
-	const copied =[...data];
 	const $textArea = document.getElementsByClassName('editValueDetail')[0];
-	// 정규표현식 적용(공백제거)
-	const editedData = $textArea.value.replace(/\s/g, "")
-	console.log(editedData);
-	// 정규 표현식 줄바꿈 
-	const split = editedData.split(/\r?\n/);
-	// console.log(editedData.match(/id:([^",}]+)/g));
-	console.log(split);
-	// console.log(editedData);
+	// 정규표현식 공백 제거
+	const str = $textArea.value.replace(/\s/g, "");
 
-	// id 값만
-	// console.log(editedData.replaceAll(/value:\d+/g, ''));
+	// 대괄호 체크
+	if(!str.startsWith('[') || !str.endsWith(']')){
+		return alert(`데이터를 배열("[]")안에 입력해주세요`);
+	};
 
-	// value 값만
-	const test = editedData.replaceAll(/id:\d+/g, '');
-	// console.log(editedData.replaceAll(/id:\d+/g, ''));
-	// const test = editedData.replaceAll(/{[^{]*?(?=value:)/g, '{').replace(/},/g, '},\n') 
-	// console.log(test.match(/value:([^",}]+)/g));
-	// console.log(editedData.match(/id:\s*([^,}]+)/g).join().replace(/value:\d+/, ''));
+	// 중괄호의 짝 유무 체크
+	const openBraces = str.split('{').length;
+	const closeBraces = str.split('}').length;
 
-	// try {
-	// 	const dataState = JSON.parse($textArea.value);
+	if(openBraces !== closeBraces){
+		return alert(`데이터를 올바른 객체("{}")형태로 입력해주세요`);
+	};
 
-	// 	data.splice(0);
-	// 	dataState.map(el=> { 
-	// 		if((el.id || el.id===0) && el.value){
-	// 			data.push(el);
-	// 		} else if( el.id === undefined || el.id === null ){
-	// 			el.id = 'null'
-	// 			data.push(el);
-	// 			alert('id가 없습니다 다시 입력해주세요');
-	// 		}
-	// 	});
-	// } catch(error) {
-	// 	alert("형식에 맞지 않는 데이터입니다. 다시 입력해주세요");
-	// };
+	try {
+		const parseData = JSON.parse($textArea.value);
+
+		// id,value 이외 key값 존재 확인 
+		for(const obj of parseData){
+			const keys = Object.keys(obj);
+
+			for(const key of keys){
+				if(key !== "id" && key !=="value"){
+					return alert(`id와 value 외 다른 key는 허용되지 않습니다`)
+				}
+			}
+		}
+
+		// id값 중복 검사
+		for(let i=0;i<parseData.length;i++){
+			const el = parseData[i];
+			if(el.id === undefined || el.id === null){
+				return alert(`${i+1}번째 id값을 찾을 수 업습니다. 다시 입력해주세요`);
+			};
+			if(el.value === undefined || el.value === null){
+				return alert(`${i+1}번째 value값을 찾을 수 없습니다. 다시 입력해주세요`);
+			};
+
+			if(typeof el.value !== 'number'){
+				return alert(`${i+1}번째 value값이 number가 아닙니다. value는 number타입이어야 합니다. `);
+			}
+
+
+			for(let j=i+1;j<parseData.length-1;j++){
+				const el2 = parseData[j];
+				if(el.id === el2.id){
+					return alert('중복된 id가 있습니다. 데이터를 다시 입력해주세요');
+				};
+			};
+		};
+	
+		data.splice(0);
+		parseData.map(el=>data.push(el));
+
+	} catch(error){
+		return alert(`올바른 데이터 형태가 아닙니다. 데이터를 다시 입력해주세요`)
+	};
 };
 
 /** 버튼에 이벤트를 부여하는 함수 */
@@ -127,11 +149,8 @@ const setBtn = (data) => {
 	$applyEditValue.addEventListener('click',()=>{
 		if(window.confirm("데이터를 수정하시겠습니까?")) { 
 			editValueFn(data);
-			view(data);
-		} else {
-			// 수정사항 원상복구
-			view(data);
-		};
+		} 
+		view(data);
 	});
 
 	// 3. 값 추가 : Add 버튼 이벤트 추가
@@ -163,10 +182,7 @@ const setBtn = (data) => {
 	$applyEditValueDetail.addEventListener('click', ()=>{ 
 		if(window.confirm("데이터를 수정하시겠습니까?")){
 			editValueDetailFn(data);
-			// view(data);
-		} else {
-			// view(data);
-		}
+		};
 		view(data);
 	});
 };

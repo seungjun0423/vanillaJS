@@ -154,9 +154,8 @@ const view = (data) => {
 	/** View: data를 입력받고 텍스트 삽입 */
 	const drawTextArea = (data) => {
 		const $textArea = document.getElementsByClassName('editValueDetail')[0];
-		// 따옴표 제거
-		const textAreaData = JSON.stringify(data,null,'  ').replace(/"/g, "")
-		$textArea.value = textAreaData;
+		const textAreaData = JSON.stringify(data,null,'  ')
+		$textArea.value = textAreaData; 
 	};
 
 	drawGraph(data);
