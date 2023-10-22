@@ -83,8 +83,12 @@ const editValueDetailFn = (data) => {
 	const copied =[...data];
 	const $textArea = document.getElementsByClassName('editValueDetail')[0];
 	// 정규표현식 적용(공백제거)
-	const editedData = $textArea.value.replace(/\s/g, "");
-	console.log(editedData.match(/id:([^",}]+)/g));
+	const editedData = $textArea.value.replace(/\s/g, "")
+	console.log(editedData);
+	// 정규 표현식 줄바꿈 
+	const split = editedData.split(/\r?\n/);
+	// console.log(editedData.match(/id:([^",}]+)/g));
+	console.log(split);
 	// console.log(editedData);
 
 	// id 값만
@@ -94,7 +98,7 @@ const editValueDetailFn = (data) => {
 	const test = editedData.replaceAll(/id:\d+/g, '');
 	// console.log(editedData.replaceAll(/id:\d+/g, ''));
 	// const test = editedData.replaceAll(/{[^{]*?(?=value:)/g, '{').replace(/},/g, '},\n') 
-	console.log(test.match(/value:([^",}]+)/g));
+	// console.log(test.match(/value:([^",}]+)/g));
 	// console.log(editedData.match(/id:\s*([^,}]+)/g).join().replace(/value:\d+/, ''));
 
 	// try {
@@ -167,6 +171,8 @@ const setBtn = (data) => {
 	});
 };
 
+
 // 첫 화면 생성
 view(data);
 setBtn(data);
+
