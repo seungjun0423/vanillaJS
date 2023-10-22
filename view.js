@@ -55,10 +55,12 @@ const view = (data) => {
 			// bar 그래프 100분위 비율 설정
 			$bar.style.height = `${barValue * 600/(maxY-minY)}px`;
 
+			// 마우스 올리면 백분위 값이 아닌 절대값을 보여준다
 			$bar.addEventListener('mouseover', (e)=>{
 				$bar.appendChild($tooltip);
 			});
 
+			// 마우스를 내리면 절대값 사라짐
 			$bar.addEventListener('mouseout', (e)=>{   
 				e.target.children[0].remove();
 		});
@@ -98,6 +100,14 @@ const view = (data) => {
 			const $value = document.createElement('input');
 			$value.className = `value`;
 			$value.value = `${el.value}`;
+
+			const $deleteBtn = document.createElement('div');
+			$deleteBtn.className = "deleteBtn";
+			$deleteBtn.innerText = `삭제`; 
+
+			const $cancelBtn = document.createElement('div');
+				$cancelBtn.className = "deleteBtn";
+				$cancelBtn.innerText = `취소`;
 			
 			// 테이블 값 편집시 숫자만 입력할 수 있도록 alert 이벤트 추가
 			$value.addEventListener('input', (e)=>{
@@ -105,21 +115,24 @@ const view = (data) => {
 				if(!isNumber.test(e.target.value) && e.target.value !== ''){
 					$value.value = `${el.value}`;
 					alert('숫자만 입력해주세요!');
-				};
+				} else {
+					$deleteBtn.remove();
+					$itemWrapper.appendChild($cancelBtn);
+					$cancelBtn.addEventListener('click', ()=>{
+						$value.value = `${el.value}`;
+						$cancelBtn.remove();
+						$itemWrapper.appendChild($deleteBtn);
+					});
+				}
 			});
-
-			const $deleteBtn = document.createElement('div');
-			$deleteBtn.className = "deleteBtn";
-			$deleteBtn.innerText = `삭제`; 
 
 			/** 삭제 버튼에 이벤트 추가 */
 			$deleteBtn.addEventListener('click',(e) => {
+				/** 삭제버튼 클릭시 value를 null로 만들고 삭제 버튼을 제거 */
 				$value.value = null
 				$deleteBtn.remove();
 
-				const $cancelBtn = document.createElement('div');
-				$cancelBtn.className = "deleteBtn";
-				$cancelBtn.innerText = `취소`;
+				/** 취소 버튼 클릭시 삭제버튼 사라짐 */
 				$cancelBtn.addEventListener('click', ()=>{
 					$value.value = `${el.value}`;
 					$cancelBtn.remove();
@@ -141,8 +154,9 @@ const view = (data) => {
 	/** View: data를 입력받고 텍스트 삽입 */
 	const drawTextArea = (data) => {
 		const $textArea = document.getElementsByClassName('editValueDetail')[0];
-
-		$textArea.value = JSON.stringify(data,null,'  ');
+		// 따옴표 제거
+		const textAreaData = JSON.stringify(data,null,'  ').replace(/"/g, "")
+		$textArea.value = textAreaData;
 	};
 
 	drawGraph(data);

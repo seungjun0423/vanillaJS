@@ -10,6 +10,10 @@ const data = [
 ];
 
 /** Controller:  기존 data를 입력받고 값 편집 (2.값 편집: Apply버튼 클릭 이벤트)*/
+
+/** number인지 아닌지 판별하는 정규표현식 */
+const isNumber = /^-?\d*\.?\d+$/;
+
 const editValueFn = (data) => {
 	const len = document.getElementsByClassName('itemWrapper').length;
 	const dataState = [];
@@ -17,7 +21,6 @@ const editValueFn = (data) => {
 	for(let i=0; i<len; i++){
 		const id = document.getElementsByClassName(`id`)[i].innerText;
 		const value = document.getElementsByClassName(`value`)[i].value;
-		const isNumber = /^-?\d*\.?\d+$/;
 
 		// VALUE에 입력된 값이 숫자 또는 공백일 시 데이터 변경
 		if(isNumber.test(value) || value === ''){
@@ -28,6 +31,7 @@ const editValueFn = (data) => {
 				dataState.push({id: Number(id), value: Number(value)});
 			}
 		} else {
+			// number 입력이 아닌 경우
 			return alert('숫자만 입력 가능합니다.');
 		}
 	};
@@ -55,11 +59,11 @@ const addDataFn = (data) => {
 	};
 	
 	if(isDuplicateId){
+		$inputId.value = '';
 		return alert('중복된 ID 입니다!');
 	};
 
 	const dataState = [...data];
-	const isNumber = /^-?\d*\.?\d+$/;
 
 	if( isNumber.test($inputId.value)){
 		dataState.push({id: Number($inputId.value), value: Number($inputValue.value)});
@@ -78,8 +82,20 @@ const addDataFn = (data) => {
 const editValueDetailFn = (data) => {
 	const copied =[...data];
 	const $textArea = document.getElementsByClassName('editValueDetail')[0];
-	const editedData = $textArea.value.split(/\r?\n/);
-	console.log(  editedData.join('') );
+	// 정규표현식 적용(공백제거)
+	const editedData = $textArea.value.replace(/\s/g, "");
+	console.log(editedData.match(/id:([^",}]+)/g));
+	// console.log(editedData);
+
+	// id 값만
+	// console.log(editedData.replaceAll(/value:\d+/g, ''));
+
+	// value 값만
+	const test = editedData.replaceAll(/id:\d+/g, '');
+	// console.log(editedData.replaceAll(/id:\d+/g, ''));
+	// const test = editedData.replaceAll(/{[^{]*?(?=value:)/g, '{').replace(/},/g, '},\n') 
+	console.log(test.match(/value:([^",}]+)/g));
+	// console.log(editedData.match(/id:\s*([^,}]+)/g).join().replace(/value:\d+/, ''));
 
 	// try {
 	// 	const dataState = JSON.parse($textArea.value);
@@ -131,7 +147,6 @@ const setBtn = (data) => {
 	const $inputValue = document.getElementsByClassName('inputValue')[0];
 	$inputValue.addEventListener('input',(e)=>{
 		const input = e.target.value ?? 0;
-		const isNumber = /^-?\d*\.?\d+$/;
 
 		if( !isNumber.test(input) && input !== ''){
 			$inputValue.value = input.slice(0,-1);
@@ -144,10 +159,11 @@ const setBtn = (data) => {
 	$applyEditValueDetail.addEventListener('click', ()=>{ 
 		if(window.confirm("데이터를 수정하시겠습니까?")){
 			editValueDetailFn(data);
-			view(data);
+			// view(data);
 		} else {
-			view(data);
+			// view(data);
 		}
+		view(data);
 	});
 };
 
