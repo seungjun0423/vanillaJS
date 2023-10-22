@@ -33,7 +33,7 @@ const view = (data) => {
 			const $xDataList = 	document.getElementsByClassName("xDataList")[0];
 			const $x = document.createElement('div');
 			$x.className = "xData";
-			$x.style.width = `${770 * (1/data.length)}px`
+			$x.style.width = `${770 * (1/data.length)}px`;
 
 			$x.innerText = xIdValue;
 			$xDataList.appendChild($x);
@@ -114,8 +114,8 @@ const view = (data) => {
 
 			/** 삭제 버튼에 이벤트 추가 */
 			$deleteBtn.addEventListener('click',(e) => {
-				const target = e.target.parentNode;
-				target.remove();
+				const target = e.target;
+				$value.value = null
 			});
 
 			$itemWrapper.appendChild($id);
@@ -131,6 +131,7 @@ const view = (data) => {
 	/** View: data를 입력받고 텍스트 삽입 */
 	const drawTextArea = (data) => {
 		const $textArea = document.getElementsByClassName('editValueDetail')[0];
+
 		$textArea.value = JSON.stringify(data,null,'  ');
 	};
 

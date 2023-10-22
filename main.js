@@ -76,12 +76,27 @@ const addDataFn = (data) => {
 
 /** Controller: 기존 data를 입력받고 값 고급 편집 (4.값 고급 편집: Apply버튼 클릭 이벤트) */
 const editValueDetailFn = (data) => {
+	const copied =[...data];
 	const $textArea = document.getElementsByClassName('editValueDetail')[0];
-	const dataState = JSON.parse($textArea.value);
+	const editedData = $textArea.value.split(/\r?\n/);
+	console.log(  editedData.join('') );
 
-	data.splice(0);
+	// try {
+	// 	const dataState = JSON.parse($textArea.value);
 
-	dataState.map(el=> { data.push(el) });
+	// 	data.splice(0);
+	// 	dataState.map(el=> { 
+	// 		if((el.id || el.id===0) && el.value){
+	// 			data.push(el);
+	// 		} else if( el.id === undefined || el.id === null ){
+	// 			el.id = 'null'
+	// 			data.push(el);
+	// 			alert('id가 없습니다 다시 입력해주세요');
+	// 		}
+	// 	});
+	// } catch(error) {
+	// 	alert("형식에 맞지 않는 데이터입니다. 다시 입력해주세요");
+	// };
 };
 
 /** 버튼에 이벤트를 부여하는 함수 */

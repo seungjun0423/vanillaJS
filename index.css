@@ -88,6 +88,8 @@ body {
 	display: flex;
 	font-weight: bold;
 	justify-content: center;
+	white-space: nowrap;
+	overflow: hidden;
 }
 
 .yBox {
@@ -169,6 +171,7 @@ body {
 }
 
 .itemWrapper .id {
+	width: 161px;
 	height: 50px;
 	display: flex;
 	flex: 1 1 20%;
@@ -177,6 +180,11 @@ body {
 	border: 1px solid #FFFFFF;
 	font-weight: bold;
 	background-color: #D9D9D9;
+	overflow: scroll;
+}
+
+.id::-webkit-scrollbar {
+	display: none;
 }
 
 .itemWrapper .value {
@@ -191,6 +199,11 @@ body {
 	background-color: #D9D9D9;
 	padding: 0;
 	margin: 0;
+	overflow: scroll;
+}
+
+.value::-webkit-scrollbar {
+	display: none;
 }
 
 .itemWrapper .deleteBtn {
