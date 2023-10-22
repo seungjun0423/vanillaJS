@@ -114,8 +114,18 @@ const view = (data) => {
 
 			/** 삭제 버튼에 이벤트 추가 */
 			$deleteBtn.addEventListener('click',(e) => {
-				const target = e.target;
 				$value.value = null
+				$deleteBtn.remove();
+
+				const $cancelBtn = document.createElement('div');
+				$cancelBtn.className = "deleteBtn";
+				$cancelBtn.innerText = `취소`;
+				$cancelBtn.addEventListener('click', ()=>{
+					$value.value = `${el.value}`;
+					$cancelBtn.remove();
+					$itemWrapper.appendChild($deleteBtn);
+				});
+				$itemWrapper.appendChild($cancelBtn);
 			});
 
 			$itemWrapper.appendChild($id);
